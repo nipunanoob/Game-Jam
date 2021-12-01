@@ -1,55 +1,75 @@
-extends KinematicBody2D
+extends RigidBody2D
 
-const TARGET_FPS = 60
-const ACCELERATION = 8
-const MAX_SPEED = 100
-const FRICTION = 10
-const AIR_RESISTANCE = 1
-const GRAVITY = 4
-const JUMP_FORCE = 125
-
-var motion = Vector2.ZERO
-var jump_count = 0
-var player_position = Vector2(-1,153)
 
 onready var sprite = $Sprite
 onready var lazer_muzzle = $LazerMuzzle
 
+
+
+var collision_point
+var contact := false
+var speed = 4.8
+
+var is_grounded = false
+var is_walled = false
+
+var energy = 100
+var count = 0
+
+onready var ground_ray1 = $GroundRay
+onready var ground_ray2 = $GroundRay2
+onready var ground_ray3 = $GroundRay3
+
+	
+func update_grounded():
+#	ground_ray.force_raycast_update()
+	is_grounded = ground_ray1.is_colliding() or ground_ray2.is_colliding() or ground_ray3.is_colliding()
+	
+		
+
 func _physics_process(delta):
-	var x_input = Input.get_action_strength("right") - Input.get_action_strength("left")
-	
-	if x_input != 0:
-#		animationPlayer.play("Run")
-		motion.x += x_input * ACCELERATION * delta * TARGET_FPS
-		motion.x = clamp(motion.x, -MAX_SPEED, MAX_SPEED)
-		sprite.flip_h = x_input < 0
-	else:
-#		animationPlayer.play("Stand")
-		pass
-	
-	motion.y += GRAVITY * delta * TARGET_FPS
-	
-	
-	
-	if is_on_floor():
-		if x_input == 0:
-			motion.x = lerp(motion.x, 0, FRICTION * delta)		
-		if Input.is_action_just_pressed("jump"):
-			motion.y = -JUMP_FORCE
-		
-	else:
-		pass
-		
-		if Input.is_action_just_released("ui_up") and motion.y < -JUMP_FORCE/2:
-			motion.y = -JUMP_FORCE/2
-		
-		if x_input == 0:
-			motion.x = lerp(motion.x, 0, AIR_RESISTANCE * delta)
-	
-	motion = move_and_slide(motion, Vector2.UP)
-	
+	update_grounded()
 	lazer_muzzle.look_at(get_global_mouse_position())
+		
+	if(is_grounded == true):
+		refuel()
+		
+	
+	
+	
+	
+func _on_LazerBeam_propel_player(point):
+	collision_point = point
+	contact = true
+	
 
 
-	if Input.is_action_just_pressed("reset"):
-		get_tree().reload_current_scene()
+func _integrate_forces(state):
+	if contact:
+		var impulse = -(get_global_mouse_position() - $CollisionShape2D.global_position).normalized() * speed
+		apply_central_impulse(impulse * speed) 
+	
+
+
+func _on_LazerBeam_stop_propel_player():
+	contact = false
+
+func refuel():
+	energy = 100
+	update_fuel_UI(energy)
+	
+func use_fuel():
+	energy -= 2
+	energy = clamp(energy, 0, 100)
+	update_fuel_UI(energy)
+	if energy == 0:
+		$LazerMuzzle/LazerBeam.is_casting = false
+
+
+		
+func _on_LazerBeam_use_fuel():
+	use_fuel()
+	
+func update_fuel_UI(value):
+	$UI/Energy/ProgressBar.value = value
+	

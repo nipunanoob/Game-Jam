@@ -1,56 +1,14 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Player/LazerBeam.gd" type="Script" id=1]
-[ext_resource path="res://Assets/Godot fx/glowing_circle.png" type="Texture" id=2]
+[ext_resource path="res://Sound/164102__bmaczero__laser.wav" type="AudioStream" id=3]
 
-[sub_resource type="Gradient" id=8]
-offsets = PoolRealArray( 0, 0.207031 )
+[sub_resource type="Curve" id=12]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.628788, 0.990385 ), 0.0, 0.0, 0, 0, Vector2( 0.992424, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=13]
+offsets = PoolRealArray( 0, 0.826087 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
-
-[sub_resource type="GradientTexture" id=4]
-gradient = SubResource( 8 )
-
-[sub_resource type="Curve" id=5]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.531136, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.996337, 0 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=6]
-curve = SubResource( 5 )
-
-[sub_resource type="ParticlesMaterial" id=2]
-flag_disable_z = true
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 120.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-scale = 0.4
-scale_curve = SubResource( 6 )
-color_ramp = SubResource( 4 )
-
-[sub_resource type="ParticlesMaterial" id=9]
-emission_shape = 2
-emission_box_extents = Vector3( 1, 1, 1 )
-flag_disable_z = true
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 250.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-tangential_accel = 100.0
-scale = 0.4
-scale_curve = SubResource( 6 )
-color_ramp = SubResource( 4 )
-
-[sub_resource type="ParticlesMaterial" id=7]
-emission_shape = 2
-emission_box_extents = Vector3( 1, 1, 1 )
-flag_disable_z = true
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 250.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-tangential_accel = 100.0
-scale = 0.4
-scale_curve = SubResource( 6 )
-color_ramp = SubResource( 4 )
 
 [sub_resource type="Environment" id=10]
 background_mode = 4
@@ -68,28 +26,33 @@ script = ExtResource( 1 )
 [node name="Line2D" type="Line2D" parent="."]
 points = PoolVector2Array( 0, 0, 207, 0 )
 width = 2.0
-default_color = Color( 0.5, 3, 6, 1 )
+default_color = Color( 0.286275, 0.74902, 0.854902, 1 )
 
 [node name="Tween" type="Tween" parent="."]
 
-[node name="CastingParticles" type="Particles2D" parent="."]
-emitting = false
+[node name="CastingParticles" type="CPUParticles2D" parent="."]
 lifetime = 0.3
-process_material = SubResource( 2 )
-texture = ExtResource( 2 )
+gravity = Vector2( 0, 0 )
+initial_velocity = 120.0
+scale_amount = 3.0
+scale_amount_curve = SubResource( 12 )
+color_ramp = SubResource( 13 )
 
-[node name="CollisionParticles" type="Particles2D" parent="."]
-emitting = false
+[node name="CollisionParticles" type="CPUParticles2D" parent="."]
 lifetime = 0.3
-process_material = SubResource( 9 )
-texture = ExtResource( 2 )
+initial_velocity = 250.0
+scale_amount = 3.0
 
-[node name="BeamParticles" type="Particles2D" parent="."]
-emitting = false
+[node name="BeamParticles" type="CPUParticles2D" parent="."]
 lifetime = 0.3
 local_coords = false
-process_material = SubResource( 7 )
-texture = ExtResource( 2 )
+emission_shape = 2
+emission_rect_extents = Vector2( 1, 1 )
+tangential_accel = 100.0
+scale_amount = 3.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 10 )
+
+[node name="LazerSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )

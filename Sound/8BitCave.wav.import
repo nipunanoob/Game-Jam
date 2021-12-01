@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/8BitCave.wav-f8a2da4f5f497a0371b07bff61e867b0.sample"
+
+[deps]
+
+source_file="res://Sound/8BitCave.wav"
+dest_files=[ "res://.import/8BitCave.wav-f8a2da4f5f497a0371b07bff61e867b0.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=true
+compress/mode=0

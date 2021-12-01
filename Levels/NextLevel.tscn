@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/cave_entrance.png" type="Texture" id=1]
+[ext_resource path="res://Levels/NextLevel.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3.375, 2.57426 )
+
+[node name="NextLevel" type="Sprite"]
+position = Vector2( -216, -190.625 )
+scale = Vector2( 1.82667, 2.525 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 1.55536, 18.3857, 12.7739, 10.1214 )
+script = ExtResource( 2 )
+
+[node name="Hitbox" type="Area2D" parent="."]
+scale = Vector2( 2, 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( 0, -0.0742569 )
+scale = Vector2( 1, 1 )
+shape = SubResource( 1 )
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_Hitbox_body_entered"]

@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Sound/8BitCave.wav" type="AudioStream" id=1]
+[ext_resource path="res://Global.gd" type="Script" id=2]
+[ext_resource path="res://Sound/Victory!.wav" type="AudioStream" id=3]
+
+[node name="Global" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="BG Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 1 )
+volume_db = -7.5
+
+[node name="VictorySound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+volume_db = -7.5
